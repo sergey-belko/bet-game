@@ -23,6 +23,8 @@ dependencies {
     implementation("org.liquibase:liquibase-core")
     implementation("org.postgresql:postgresql:42.2.19")
 
+    implementation("org.springframework.boot:spring-boot-starter-security")
+
     testImplementation("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")

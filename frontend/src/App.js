@@ -1,16 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
 import React, { useEffect, useState } from "react";
+import './App.css';
+import logo from './logo.svg';
+import { connect, sendMessage } from './websocket';
 
 
 function App() {
   const [greeting, setGreeting] = useState();
+
   useEffect(() => {
-    fetch("/api/hello")
-      .then(res => res.json())
-      .then(setGreeting)
-      .catch(console.error);
-  }, [setGreeting]);
+    connect(onMessageReceived)
+  }, []);
+
+  const onMessageReceived = (msg) => {
+    const notification = JSON.parse(msg.body);
+
+    console.log("Received a new message: ", { notification });
+    setGreeting(notification)
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -18,19 +25,20 @@ function App() {
         {greeting ? (
           <p>Hello from {greeting}</p>
         ) : (
-          <p>Loading...</p>
-        )}
+            <p>Loading...</p>
+          )}
         <p>
           Edit <code>src/App.tsx</code> and save to reload.
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+
+        <button
+          onClick={() => {
+            sendMessage("AAAAAAAAAAAAAAAAA")
+            setGreeting(false)
+          }}
         >
-          Learn React
-        </a>
+        Send message
+        </button>
       </header>
     </div>
   );
