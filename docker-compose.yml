@@ -2,19 +2,42 @@ version: "3.9"
 services:
   frontend:
     build: ./frontend
+    hostname: frontend
     ports:
-      - "80:8001"
+      - 7001:80
+    environment:
+      - API_HOST=backend:8080
 
   backend:
     build: ./backend
+    hostname: backend
     ports:
-      - "8080:8002"
+      - 7002:8080
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
 
   db:
     image: "postgres"
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=casino
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     volumes:
-      - ./volume/db:/var/lib/postgresql/data/
+      - ./volume/db:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_USERNAME}@mail.com
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - ./volume/pgadmin:/root/.pgadmin
+    ports:
+      - 7004:80
+    restart: unless-stopped

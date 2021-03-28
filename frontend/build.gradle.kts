@@ -1,36 +1,33 @@
+import com.github.gradle.node.yarn.task.YarnTask
+
 plugins {
-    id("org.jetbrains.kotlin.js") version "1.4.10"
+    id("com.github.node-gradle.node") version "3.0.1"
 }
 
-group = "by.snb"
-version = "0.0.0"
+defaultTasks("build", "test", " clean")
 
-repositories {
-    mavenCentral()
+tasks.register<Delete>("clean") {
+    delete("build")
 }
 
-dependencies {
-    implementation(kotlin("stdlib-js"))
+tasks.register<YarnTask>("yarn-start") {
+    group = "casino-yarn"
+    args.set(listOf("start"))
 }
 
-kotlin {
-    js {
-        browser {
-            webpackTask {
-                cssSupport.enabled = true
-            }
+tasks.register<YarnTask>("install") {
+    group = "casino-yarn"
+    args.set(listOf("install"))
+}
 
-            runTask {
-                cssSupport.enabled = true
-            }
+tasks.register<YarnTask>("build") {
+    group = "casino-yarn"
+    args.set(listOf("build"))
 
-            testTask {
-                useKarma {
-                    useChromeHeadless()
-                    webpackConfig.cssSupport.enabled = true
-                }
-            }
-        }
-        binaries.executable()
-    }
+    dependsOn("install")
+}
+
+tasks.register<YarnTask>("test") {
+    group = "casino-yarn"
+    args.set(listOf("test"))
 }

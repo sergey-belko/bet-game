@@ -1,13 +1,27 @@
 import logo from './logo.svg';
 import './App.css';
+import React, { useEffect, useState } from "react";
+
 
 function App() {
+  const [greeting, setGreeting] = useState();
+  useEffect(() => {
+    fetch("/api/hello")
+      .then(res => res.json())
+      .then(setGreeting)
+      .catch(console.error);
+  }, [setGreeting]);
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+        {greeting ? (
+          <p>Hello from {greeting}</p>
+        ) : (
+          <p>Loading...</p>
+        )}
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit <code>src/App.tsx</code> and save to reload.
         </p>
         <a
           className="App-link"

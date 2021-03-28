@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    hibernate.ddl-auto: none
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+  datasource.driver-class-name: org.postgresql.Driver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: development
+  datasource:
+    url: jdbc:postgresql://192.168.99.105:5432/casino-dev
+    username: user
+    password: password

@@ -1,7 +1,7 @@
-FROM nginx:stable-alpine
+FROM nginx:latest
 
 COPY ./build /usr/share/nginx/html
-COPY ./nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx_template /etc/nginx/templates
 
 EXPOSE 80
 
