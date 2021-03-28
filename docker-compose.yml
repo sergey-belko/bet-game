@@ -41,3 +41,53 @@ services:
     ports:
       - 7004:80
     restart: unless-stopped
+
+  #  ldap:
+  #    image: osixia/openldap:1.5.0
+  #    expose:
+  #      - 389
+  #      - 636
+  #    environment:
+  #      - LDAP_ADMIN_PASSWORD=password
+  #      - LDAP_DOMAIN=by.snb
+  #      - LDAP_ORGANISATION=snb
+  #    volumes:
+  #      - ./volume/ldap/sf4app.schema:/container/service/slapd/assets/config/bootstrap/schema/sf4app.schema
+  #      - ./volume/ldap/people.ldif:/container/service/slapd/assets/config/bootstrap/ldif/custom/people.ldif
+  #
+  #  ldap-client:
+  #    image: wheelybird/ldap-user-manager:latest
+  #    ports:
+  #      - 7005:80
+  #    environment:
+  #      - LDAP_URI=ldap://ldap
+  #      - LDAP_BASE_DN=dc=ldapusermanager,dc=org
+  #      - LDAP_ADMINS_GROUP=admins
+  #      - LDAP_ADMIN_BIND_DN=cn=admin,dc=ldapusermanager,dc=org
+  #      - LDAP_ADMIN_BIND_PWD=password
+  #      - LDAP_IGNORE_CERT_ERRORS=true
+
+  # https://scytalelabs.com/setup-and-configure-openldap-using-docker-image-on-ubuntu-16-04/
+  # https://betterprogramming.pub/ldap-docker-image-with-populated-users-3a5b4d090aa4
+  # https://github.com/osixia/docker-openldap#beginner-guide
+  # https://medium.com/@philippe_andreas/how-to-customized-ldap-schema-docker-image-for-a-symfony-4-project-df6efc806867
+
+  # https://spring.io/guides/gs/authenticating-ldap/
+  #
+  ldap_server:
+    image: wshihadeh/openldap:withdata
+    environment:
+      LDAP_ADMIN_PASSWORD: test1234
+      LDAP_BASE_DN: dc=shihadeh,dc=intern
+    ports:
+      - 389:389
+    volumes:
+      - ./volume/ldap-tmp/ldap_data:/var/lib/ldap
+      - ./volume/ldap-tmp/ldap_config:/etc/ldap/slapd.d
+  ldap_server_admin:
+    image: osixia/phpldapadmin:0.7.2
+    ports:
+      - 7005:80
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: ldap_server
+      PHPLDAPADMIN_HTTPS: 'false'
