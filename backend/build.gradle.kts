@@ -5,6 +5,7 @@ plugins {
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     application
     id("org.liquibase.gradle") version "2.0.3" // https://github.com/liquibase/liquibase-gradle-plugin
+    id("org.jetbrains.kotlin.plugin.spring") version "1.4.31"
 }
 
 group = "by.snb"
@@ -24,6 +25,10 @@ dependencies {
     implementation("org.postgresql:postgresql:42.2.19")
 
     implementation("org.springframework.boot:spring-boot-starter-security")
+
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("javax.validation:validation-api:2.0.1.Final")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+")
 
     testImplementation("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
